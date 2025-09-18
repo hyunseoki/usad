@@ -19,7 +19,7 @@ def to_device(data, device):
         return [to_device(x, device) for x in data]
     return data.to(device, non_blocking=True)
     
-def plot_history(history):
+def plot_history(history, save_fn):
     losses1 = [x['val_loss1'] for x in history]
     losses2 = [x['val_loss2'] for x in history]
     plt.plot(losses1, '-x', label="loss1")
@@ -29,7 +29,9 @@ def plot_history(history):
     plt.legend()
     plt.title('Losses vs. No. of epochs')
     plt.grid()
-    plt.show()
+    # plt.show()
+    plt.savefig(save_fn)
+    plt.close()
     
 def histogram(y_test,y_pred):
     plt.figure(figsize=(12,6))
@@ -41,7 +43,7 @@ def histogram(y_test,y_pred):
     plt.grid()
     plt.show()
     
-def ROC(y_test,y_pred):
+def ROC(y_test,y_pred, save_fn):
     fpr,tpr,tr=roc_curve(y_test,y_pred)
     auc=roc_auc_score(y_test,y_pred)
     idx=np.argwhere(np.diff(np.sign(tpr-(1-fpr)))).flatten()
@@ -53,7 +55,9 @@ def ROC(y_test,y_pred):
     plt.plot(fpr[idx],tpr[idx], 'ro')
     plt.legend(loc=4)
     plt.grid()
-    plt.show()
+    plt.savefig(save_fn)
+    # plt.show()
+    plt.close()
     return tr[idx]
     
 def confusion_matrix(target, predicted, perc=False):
